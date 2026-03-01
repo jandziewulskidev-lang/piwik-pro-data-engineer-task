@@ -1,0 +1,14 @@
+services:
+  app:
+    build: .
+    container_name: de-task-app
+    volumes:
+      - .:/app
+      - ./data:/data
+    env_file:
+      - .env
+    environment:
+      DBT_PROFILES_DIR: /app
+      DBT_USER: ${DBT_USER:-dev}
+    tty: true
+    command: bash

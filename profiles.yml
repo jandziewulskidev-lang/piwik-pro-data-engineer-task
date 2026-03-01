@@ -1,0 +1,12 @@
+data_engineer_task:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: /data/warehouse_dev.duckdb
+      schema: "dbt_{{ env_var('DBT_USER', 'dev') }}"
+    prod:
+      type: duckdb
+      path: /data/warehouse_prod.duckdb
+      schema: analytics
+
