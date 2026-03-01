@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: stg_hr_employees
+    description: "Cleaned employee master data from HR Excel export."
+    columns:
+      - name: employee_id
+        tests:
+          - unique
+          - not_null
+      - name: is_active
+        tests:
+          - accepted_values:
+              values: ['true', 'false'] 
+      - name: _loaded_at
+        tests:
+          - not_null
+
+  - name: stg_project_assignments
+    columns:
+      - name: assignment_id
+        tests:
+          - unique
+          - not_null
+      - name: employee_id
+        tests:
+          - not_null
+      - name: weekly_hours
+        tests:
+          - weekly_hours_reasonable: # Test that weekly_hours is non-negative
+              severity: warn
+      - name: is_billable
+        tests:
+          - accepted_values:
+              values: ['true', 'false', null]
