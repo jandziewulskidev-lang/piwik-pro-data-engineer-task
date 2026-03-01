@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+from datetime import datetime, timezone
 from pathlib import Path
 
 import duckdb
@@ -36,10 +37,13 @@ def load_csv_to_table(
     """
     logger.info("Loading %s → raw.%s", csv_path, table_name)
     df = pd.read_csv(csv_path)
+    df["_loaded_at"] = datetime.now(timezone.utc)
+    df["_source_file"] = csv_path.name
     con.execute(
         f"CREATE OR REPLACE TABLE raw.{table_name} AS SELECT * FROM df"
     )
     count = con.execute(f"SELECT COUNT(*) FROM raw.{table_name}").fetchone()[0]
+    
     logger.info("Loaded %d rows into raw.%s", count, table_name)
 
 
