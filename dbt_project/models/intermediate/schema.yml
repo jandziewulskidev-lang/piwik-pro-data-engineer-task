@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: int_project_assignments_joined
+    description: "Tabela łącząca przypisania do projektów z danymi HR pracowników po kluczach SK."
+    columns:
+      - name: assignment_id
+        tests:
+          - unique
+          - not_null
+      - name: employee_sk
+        tests:
+          - not_null
+      - name: is_valid_assignment
+        tests:
+          - not_null

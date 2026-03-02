@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: project_staffing
+    description: |
+      Agregacja staffingowa projektów. Zawiera kod i nazwę projektu, lidera, wielkość zespołu (aktywni pracownicy) oraz sumę tygodniowych godzin (aktywni pracownicy).
+      Uwzględnia tylko aktywnych pracowników w agregacjach, ale projekt pojawia się nawet bez aktywnych przypisanych.
+    columns:
+      - name: project_code
+        description: Unikalny kod projektu.
+      - name: project_name
+        description: Nazwa projektu.
+      - name: project_lead
+        description: Imię i nazwisko lidera projektu (rola 'Lead', preferowany aktywny pracownik).
+      - name: team_size
+        description: Liczba aktywnych pracowników przypisanych do projektu.
+      - name: total_weekly_hours
+        description: Łączna liczba tygodniowych godzin przypisanych aktywnym pracownikom.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [project_code, project_name]
+      - not_null:
+          column_name: project_code
+      - not_null:
+          column_name: project_name
+      - dbt_utils.expression_is_true:
+          expression: team_size >= 0
