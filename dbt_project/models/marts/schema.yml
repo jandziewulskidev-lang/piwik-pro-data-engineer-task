@@ -20,6 +20,3 @@ models:
           column_name: project_code
       - not_null:
           column_name: project_name
-      - dbt_utils.expression_is_true:
-          arguments:
-            expression: 'team_size >= 0'

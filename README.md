@@ -10,6 +10,11 @@ This dbt project provides analytics and data quality checks for project staffing
 ## 2. Setup & Running
 1. **Install dependencies**
    - Make sure you have dbt installed and configured for your environment (DuckDB, Postgres, etc.).
+   - After installation, run:
+     ```bash
+     dbt deps
+     ```
+     To install required dbt packages.
 2. **Prepare your data**
    - Place raw Excel exports in `data/raw/`.
    - Run the preprocessing script to convert Excel files to CSV:
@@ -65,3 +70,14 @@ make help
 - Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
 - Find [dbt events](https://events.getdbt.com) near you
 - Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+
+## Final Result
+After running all steps, you can query the final table `project_staffing` for aggregated staffing metrics. Example:
+
+```sql
+SELECT * FROM project_staffing;
+```
+
+Example output:
+
+![Example result screenshot](docs/example_project_staffing.png)
