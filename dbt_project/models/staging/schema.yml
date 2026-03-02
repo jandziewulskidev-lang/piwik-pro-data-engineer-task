@@ -5,44 +5,87 @@ models:
     description: "Cleaned employee master data from HR Excel export."
     columns:
       - name: employee_id
+        description: "Unique identifier for the employee from the HR system."
         tests:
           - unique
           - not_null
-      - name: status
+      - name: employee_sk
+        description: "Surrogate key for the employee, used for joins."
+      - name: first_name
+        description: "Employee's first name."
+      - name: last_name
+        description: "Employee's last name."
+      - name: full_name
+        description: "Employee's full name (first and last name combined)."
+      - name: email
+        description: "Cleaned company email address of the employee."
         tests:
-          - accepted_values:
-              values: ['ACTIVE', 'INACTIVE']
-      - name: is_active
-        tests:
-          - accepted_values:
-              values: ['true', 'false'] 
+        - dbt_utils.expression_is_true:
+              expression: "like '%@company.com'" # Test that email ends with @company.com
+      - name: raw_email
+        description: "Original email address from the raw HR export."
+      - name: department
+        description: "Department where the employee works."
+      - name: job_title
+        description: "Employee's job title."
+      - name: manager_id
+        description: "Identifier of the employee's manager from the HR system."
       - name: manager_sk
+        description: "Surrogate key of the manager, used for joins."
         tests:
           - relationships:
               to: ref('stg_hr_employees')
               field: employee_sk
-      - name: email
+      - name: date_of_hire
+        description: "Date when the employee was hired."
+      - name: termination_date
+        description: "Date when the employee left the company (null if still employed)."
+      - name: status
+        description: "Employment status: ACTIVE or INACTIVE."
         tests:
-        - dbt_utils.expression_is_true:
-              expression: "like '%@company.com'" # Test that email ends with @company.com
+          - accepted_values:
+              values: ['ACTIVE', 'INACTIVE']
+      - name: _dbt_updated_at
+        description: "Timestamp of the last update by dbt."
+      - name: is_active
+        description: "Boolean flag indicating if the employee is currently active."
+        tests:
+          - accepted_values:
+              values: ['true', 'false'] 
 
   - name: stg_project_assignments
     columns:
       - name: assignment_id
+        description: "Unique identifier for the project assignment."
         tests:
           - unique
           - not_null
       - name: employee_id
+        description: "Identifier of the assigned employee from the HR system."
         tests:
           - not_null
           - relationships: 
               to: ref('stg_hr_employees')
               field: employee_id
+      - name: employee_sk
+        description: "Surrogate key for the assigned employee, used for joins."
+      - name: project_code
+        description: "Unique code identifying the project."
+      - name: project_name
+        description: "Name of the project."
+      - name: assignment_role
+        description: "Role of the employee in the project assignment."
+      - name: start_date
+        description: "Date when the assignment started."
       - name: weekly_hours
+        description: "Number of hours assigned per week to the project."
         tests:
           - weekly_hours_reasonable: # Test that weekly_hours is non-negative
               severity: warn
       - name: is_billable
+        description: "Boolean flag indicating if the assignment is billable."
         tests:
           - accepted_values:
               values: ['true', 'false']
+      - name: _dbt_updated_at
+        description: "Timestamp of the last update by dbt."

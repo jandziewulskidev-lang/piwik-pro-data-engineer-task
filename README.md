@@ -64,6 +64,37 @@ make help
 - All models and columns are documented in their respective `schema.yml` files.
 - Column descriptions and business logic are provided for clarity and maintainability.
 
+## Input Data
+The main input file for HR data is `data/processed/hr_employees.csv`. Below are the columns and their meanings:
+
+| Column            | Description                                                        |
+|-------------------|--------------------------------------------------------------------|
+| employee_id       | Unique identifier for the employee from the HR system              |
+| first_name        | Employee's first name                                              |
+| last_name         | Employee's last name                                               |
+| email_address     | Employee's email address                                           |
+| department        | Department where the employee works                                |
+| job_title         | Employee's job title                                               |
+| date_of_hire      | Date when the employee was hired                                   |
+| termination_date  | Date when the employee left the company (empty if still employed)  |
+| status            | Employment status: Active or Inactive                              |
+| reports_to        | Employee ID of the manager to whom the employee reports            |
+
+The main input file for project assignments is `data/processed/project_assignments.csv`. Below are the columns and their meanings:
+
+| Column          | Description                                                        |
+|-----------------|--------------------------------------------------------------------|
+| assignment_id   | Unique identifier for the project assignment                       |
+| emp_id          | Employee ID assigned to the project                                |
+| project_code    | Unique code identifying the project                                |
+| project_name    | Name of the project                                                |
+| assignment_role | Role of the employee in the project                                |
+| start_date      | Date when the assignment started                                   |
+| weekly_hours    | Number of hours assigned per week to the project                   |
+| billable        | Indicates if the assignment is billable (Y/Yes/N/No)               |
+
+These columns are used to clean, transform, and analyze project assignment data in the dbt project.
+
 ## 7. Resources
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
 - Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
