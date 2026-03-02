@@ -19,4 +19,6 @@ COPY pyproject.toml .
 # Install Python dependencies
 RUN uv pip install . --system
 
+RUN dbt deps
+
 CMD ["bash"]

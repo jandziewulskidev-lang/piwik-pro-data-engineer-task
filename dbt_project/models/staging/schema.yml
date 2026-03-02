@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: stg_hr_employees
+    description: "Cleaned employee master data from HR Excel export."
+    columns:
+      - name: employee_id
+        tests:
+          - unique
+          - not_null
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['ACTIVE', 'INACTIVE']
+      - name: is_active
+        tests:
+          - accepted_values:
+              values: ['true', 'false'] 
+      - name: manager_sk
+        tests:
+          - relationships:
+              to: ref('stg_hr_employees')
+              field: employee_sk
+      - name: email
+        tests:
+        - dbt_utils.expression_is_true:
+              expression: "like '%@company.com'" # Test that email ends with @company.com
+
+  - name: stg_project_assignments
+    columns:
+      - name: assignment_id
+        tests:
+          - unique
+          - not_null
+      - name: employee_id
+        tests:
+          - not_null
+          - relationships: 
+              to: ref('stg_hr_employees')
+              field: employee_id
+      - name: weekly_hours
+        tests:
+          - weekly_hours_reasonable: # Test that weekly_hours is non-negative
+              severity: warn
+      - name: is_billable
+        tests:
+          - accepted_values:
+              values: ['true', 'false']
