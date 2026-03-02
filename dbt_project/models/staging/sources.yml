@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    loaded_at_field: _loaded_at
+
+    freshness:
+      warn_after: {count: 24, period: hour} #dbt source fressness test will warn if data is older than 24 hours
+      error_after: {count: 35, period: day}
+
+    tables:
+      - name: hr_employees
+      - name: project_assignments
