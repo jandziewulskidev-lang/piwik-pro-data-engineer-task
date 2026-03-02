@@ -6,11 +6,9 @@ all: pipeline
 # Display available commands
 help:
 	@echo "Available commands:"
-	@echo "  make pipeline   - Run full pipeline (preprocess + load + dbt run + dbt test)"
 	@echo "  make preprocess - Process raw Excel files into CSVs"
 	@echo "  make load       - Load processed CSVs into DuckDB raw schema"
-	@echo "  make dbt-run    - Run all dbt models"
-	@echo "  make dbt-test   - Run all dbt tests"
+
 
 # Step 1: Process raw Excel files → data/processed/*.csv
 preprocess:

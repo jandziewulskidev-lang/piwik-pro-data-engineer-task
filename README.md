@@ -26,6 +26,19 @@ This dbt project provides analytics and data quality checks for project staffing
      dbt test
      ```
 
+## Display available commands
+You can use the following Makefile commands:
+
+```
+make preprocess   # Process raw Excel files into CSVs
+make load         # Load processed CSVs into DuckDB raw schema
+```
+
+To see this list in your terminal, run:
+```
+make help
+```
+
 ## 3. Data Flow
 - **Staging models**: Clean and standardize raw data (`stg_hr_employees`, `stg_project_assignments`).
 - **Intermediate models**: Join HR and assignment data, add business logic flags (`int_project_assignments_joined`).
