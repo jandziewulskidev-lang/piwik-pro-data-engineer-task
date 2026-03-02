@@ -24,15 +24,6 @@ renamed AS (
         then   {{ dbt_utils.generate_surrogate_key(['upper(trim(manager_id))']) }}
         else null
         end as manager_sk,
-        -- case
-        --     when reports_to in (
-        --         SELECT
-        --             employee_id
-        --         FROM
-        --             source
-        --     ) then reports_to
-        --     else null
-        -- end as manager_id,
         CAST(date_of_hire AS DATE) AS date_of_hire,
         CAST(termination_date AS DATE) AS termination_date,
         upper(trim(status)) AS status,
