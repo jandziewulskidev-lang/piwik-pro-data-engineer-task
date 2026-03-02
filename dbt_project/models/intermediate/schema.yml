@@ -2,15 +2,13 @@ version: 2
 
 models:
   - name: int_project_assignments_joined
-    description: "Tabela łącząca przypisania do projektów z danymi HR pracowników po kluczach SK."
+    description: |
+      Intermediate model combining project assignment records with HR employee data 
+      using surrogate keys (SK).  
+      Provides a unified view of employee project involvement for reporting and analytics.
     columns:
       - name: assignment_id
+        description: "Unique identifier of the employee–project assignment."
         tests:
           - unique
-          - not_null
-      - name: employee_sk
-        tests:
-          - not_null
-      - name: is_valid_assignment
-        tests:
           - not_null

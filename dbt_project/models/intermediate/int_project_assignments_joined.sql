@@ -1,45 +1,42 @@
 with assignments as (
-    select * from {{ ref('stg_project_assignments') }}
-),
-
-employees as (
-    select * from {{ ref('stg_hr_employees') }}
-),
-
-joined as (
+    -- Get cleaned project assignment records
     select
-        -- Klucze SK z Twojego stagingu (zmienisz nazwy, jeśli wygenerowałeś je inaczej)
+        *
+    from
+        {{ ref('stg_project_assignments') }}
+),
+employees as (
+    -- Get cleaned employee records
+    select
+        *
+    from
+        {{ ref('stg_hr_employees') }}
+),
+joined as (
+    -- Join assignments with employees, no GROUP BY here
+    select
+        -- Primary keys from both tables
         a.assignment_id,
-        a.employee_sk,
-        
-        -- Wymiary pracownika (dociągnięte z tabeli HR)
-        e.full_name as employee_name,
-        e.email as employee_email,
-        e.department,
-        e.job_title,
-        e.status as employee_status,
-        
-        -- Wymiary i fakty z przypisań
+        a.employee_id,
         a.project_code,
+        -- Project details from assignments
         a.project_name,
         a.assignment_role,
-        a.start_date as assignment_start_date,
         a.weekly_hours,
+        a.start_date as assignment_start_date,
         a.is_billable,
-
-        -- Tutaj sprawdzamy regułę biznesową: "Czy przypisanie na pewno jest aktywne?"
-        -- Taki zapis jest wydajny i uodporniony na błędy, tak jak rozmawialiśmy
-        case 
-            when e.status = 'ACTIVE' 
-                 and (e.termination_date is null or a.start_date <= e.termination_date)
-            then true 
-            else false 
-        end as is_valid_assignment
-
-    from assignments a
-    -- JOIN używa Twoich nowych Surrogate Keys!
-    left join employees e
-        on a.employee_sk = e.employee_sk
+        -- Employee details from HR
+        e.full_name as employee_name,
+        e.email,
+        e.department,
+        e.job_title,
+        e.is_active as is_employee_active,
+        cast('{{ run_started_at }}' as date) AS _int_dbt_updated_at,
+    from
+        assignments a -- Using LEFT JOIN ensures no project assignment is lost, even if the employee record is missing.
+        left join employees e on a.employee_sk = e.employee_sk
 )
-
-select * from joined
+select
+    *
+from
+    joined
